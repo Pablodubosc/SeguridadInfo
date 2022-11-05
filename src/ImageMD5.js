@@ -15,19 +15,22 @@ import ImgToBase64 from 'react-native-image-base64';
 //import md5 to use md5()
 import md5 from 'md5';
  
+
+
 const App = ({navigation}) => {
 
     const pickImage =  () => {
       console.log('entra a la funcion')
-        /*ImgToBase64.getBase64String('file:./plane.jpg')
+        ImgToBase64.getBase64String('file://./plane.jpg')
         .then(base64String => console.log(md5(base64String)))
         .catch(err => console.log('hubo un error'));
-        };*/}
+        };
 
  
   return (
     <SafeAreaView style={{flex: 1}}>
         <Button title="Texto a Md5" onPress={ ()=> navigation.navigate("TEXTO A MD5")}></Button>
+        <Button title="Encrpyt" onPress={ ()=> navigation.navigate("Encrpyt") }></Button>
         <Image source={require('./plane.jpg')} style={{ width: 200, height: 200 }} />
       <Button title="GET HASH FROM IMAGE" onPress={pickImage} />
     </SafeAreaView>
