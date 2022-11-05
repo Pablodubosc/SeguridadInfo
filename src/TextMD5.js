@@ -14,22 +14,27 @@ import {
  
 //import md5 to use md5()
 import md5 from 'md5';
+import Rusha from 'rusha';
  
 const App = ({navigation}) => {
   const [inputText, setInputText] = useState('');
-  const [text, setText] = useState('');
+  const [textMD5, setTextMD5] = useState('');
+  const [textSHA1, setTextSHA1] = useState('');
  
   const convertMD5 = () => {
     let encodedVal = md5(inputText);
-    setText(encodedVal);
+    setTextMD5(encodedVal);
+    const digest = Rusha.createHash().update(inputText).digest('hex'); 
+    setTextSHA1(digest)
   };
  
   return (
     <SafeAreaView style={{flex: 1}}>
-        <Button title="Imagen a Md5" onPress={ ()=> navigation.navigate("IMAGEN A MD5")}></Button>
+        <Button title="HASH IMAGEN" onPress={ ()=> navigation.navigate("HASH IMAGEN")}></Button>
+        <Button title="AES ENCRYPT" onPress={ ()=> navigation.navigate("AES ENCRYPT")}></Button>
       <View style={styles.container}>
         <Text style={styles.titleStyle}>
-          CONVERSOR DE TEXTO A HASH MD5
+          CONVERSOR DE TEXTO A HASH MD5 y SHA1
         </Text>
         <Text style={styles.textStyle}>
           Ingresar texto a convertir
@@ -46,10 +51,13 @@ const App = ({navigation}) => {
           style={styles.buttonStyle}
           onPress={convertMD5}>
           <Text style={styles.buttonTextStyle}>
-           HASHEAR A MD5
+           HASHEAR
           </Text>
         </TouchableOpacity>
-        <Text style={styles.textStyle}>{text}</Text>
+        <Text>HASH MD5</Text>
+        <Text style={styles.textStyle}>{textMD5}</Text>
+        <Text>HASH SHA1</Text>
+        <Text style={styles.textStyle}>{textSHA1}</Text>
       </View>
     </SafeAreaView>
   );

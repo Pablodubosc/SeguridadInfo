@@ -1,87 +1,63 @@
-// import React in our code
-import React, {useState} from 'react';
- 
-// import all the components we are going to use
-import {
-  SafeAreaView,
-  View,
-  StyleSheet,
-  Button,
-  Image,
-} from 'react-native';
-
-import ImgToBase64 from 'react-native-image-base64';
- 
-//import md5 to use md5()
+import React, { useState, useEffect } from 'react';
+import { Button, Image, View, Text, StyleSheet } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { Buffer } from "buffer";
+import Rusha from 'rusha';
 import md5 from 'md5';
- 
 
+export default function ImagePickerExample({navigation}) {
+  const [image, setImage] = useState(null);
 
-const App = ({navigation}) => {
+  const pickImage = async () => {
+    // Get an image from the user's device
+    let result = await ImagePicker.launchImageLibraryAsync({ 
+      allowsEditing: true, 
+      aspect: [9,7.4], 
+      exif:true, 
+      base64:true, 
+      quality: 1, 
+    });
 
-    const pickImage =  () => {
-      console.log('entra a la funcion')
-        ImgToBase64.getBase64String('file://./plane.jpg')
-        .then(base64String => console.log(md5(base64String)))
-        .catch(err => console.log('hubo un error'));
-        };
+    // Convert the image data from Base64 to binary
+    const binaryImage = Buffer.from(result.base64, "base64");
 
- 
+    // Get the SHA-1 digest of the binary image data
+    const digest = Rusha.createHash().update(binaryImage).digest('hex'); 
+    const md5Hash = md5(binaryImage);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+      setTextMD5(md5Hash);
+      setTextSHA1(digest)
+    }
+  };
+  const [textMD5, setTextMD5] = useState('');
+  const [textSHA1, setTextSHA1] = useState('');
+
   return (
-    <SafeAreaView style={{flex: 1}}>
-        <Button title="Texto a Md5" onPress={ ()=> navigation.navigate("TEXTO A MD5")}></Button>
-        <Button title="Encrpyt" onPress={ ()=> navigation.navigate("Encrpyt") }></Button>
-        <Image source={require('./plane.jpg')} style={{ width: 200, height: 200 }} />
-      <Button title="GET HASH FROM IMAGE" onPress={pickImage} />
-    </SafeAreaView>
+    <View>
+      <Button title="HASH TEXTO" onPress={ ()=> navigation.navigate("HASH TEXTO")}></Button>
+      <Button title="AES ENCRYPT" onPress={ ()=> navigation.navigate("AES ENCRYPT")}></Button>
+      <View style={styles.container}>
+        {image && <Image source={{ uri: image }} style={{ width: 200, height: 200,left:100 }} />}
+        <Button title="Pick an image from camera roll" onPress={pickImage} />
+        <Text>HASH MD5</Text>
+        <Text style={styles.textStyle}>{textMD5}</Text>
+        <Text>HASH SHA1</Text>
+        <Text style={styles.textStyle}>{textSHA1}</Text>
+      </View>
+    </View>
   );
-};
-export default App;
- 
+}
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    top:50,
     backgroundColor: 'white',
-    justifyContent: 'center',
-    padding: 10,
-  },
-  titleStyle: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  image: {
-    width:150,
-    height:150,
-    left:120
+    justifyContent:'center'
   },
   textStyle: {
     textAlign: 'center',
     margin: 10,
-  },
-  textInputStyle: {
-    flexDirection: 'row',
-    height: 40,
-    marginTop: 20,
-    marginLeft: 35,
-    marginRight: 35,
-    margin: 10,
-  },
-  buttonStyle: {
-    backgroundColor: '#51D8C7',
-    borderWidth: 0,
-    color: '#FFFFFF',
-    borderColor: '#51D8C7',
-    height: 40,
-    alignItems: 'center',
-    borderRadius: 5,
-    marginLeft: 35,
-    marginRight: 35,
-    marginTop: 30,
-  },
-  buttonTextStyle: {
-    color: '#FFFFFF',
-    paddingVertical: 10,
-    fontSize: 16,
   },
 });

@@ -11,9 +11,9 @@ export default function App () {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="TEXTO A MD5" component={TextMD5}/>
-        <Stack.Screen name="IMAGEN A MD5" component={ImageMD5}/>
-        <Stack.Screen name="Encrpyt" component={TodoEncrypt}/>
+        <Stack.Screen name="HASH TEXTO" component={TextMD5}/>
+        <Stack.Screen name="HASH IMAGEN" component={ImageMD5}/>
+        <Stack.Screen name="AES ENCRYPT" component={TodoEncrypt}/>
       </Stack.Navigator>
     </NavigationContainer>
     )
