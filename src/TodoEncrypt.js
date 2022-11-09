@@ -6,7 +6,6 @@ import {
     View,
     StyleSheet,
     TextInput,
-    TouchableOpacity,
     Button
   } from 'react-native';
 
@@ -22,6 +21,7 @@ export const TodoEncrypt = ({navigation}) => {
     
     const encrypt = () => {
         setCiphertext(CryptoJS.AES.encrypt(inputText, 'f293a70113ca6ae823924c13c2059a3f').toString());
+        setInputText('')
         console.log(ciphertext)
         return ciphertext;
     }
